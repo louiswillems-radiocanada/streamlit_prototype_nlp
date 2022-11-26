@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+seaborn = "*"
+matplotlib = "*"
+streamlit = "==0.87"
+pandas = "==1.2.4"
+keybert = "*"
+flair = "*"
+click = "<8"
+wordcloud = "*"
+htbuilder = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"
