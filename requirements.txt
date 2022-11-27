@@ -14,4 +14,4 @@ bertopic
 spacy
 openpyxl
 watchdog
-tensorflow-gpu
+onnxruntime
