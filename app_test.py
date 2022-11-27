@@ -1,64 +1,18 @@
 import numpy as np
 import pandas as pd
-import seaborn as sns
 import streamlit as st
 
 # Plotly
 import plotly.express as px
 
-# Topic modeling - Thématiques
 from bertopic import BERTopic
 from sklearn.feature_extraction.text import CountVectorizer
 
-
-st.set_page_config(
-    page_title="VoC sentiment analysis",
-    page_icon="📊",
-    layout="wide",
-    initial_sidebar_state="expanded")
-
-st.sidebar.image(
-    "https://cdn.freebiesupply.com/logos/large/2x/radio-canada-logo-png-transparent.png",
-    width=100,
-)
-
-
-def _max_width_():
-    max_width_str = f"max-width: 1500px;"
-    st.markdown(
-        f"""
-    <style>
-    .reportview-container .main .block-container{{
-        {max_width_str}
-    }}
-    </style>    
-    """,
-        unsafe_allow_html=True,
-    )
-
-
-_max_width_()
-
-
-st.sidebar.title("Outil d'analyse exploratoire des données textuelles")
-st.sidebar.markdown("------------------------------------------------------------------------------------")
-
-# st.sidebar.markdown("##Upload reviews data :")
-
 uploaded_file = st.sidebar.file_uploader("Charger les données ici :", type=("csv", "xlsx"),)
-
-
-# ===============================================================================================================================================
-# ====================================================== Importation des données  ===============================================================
-# ===============================================================================================================================================
-
-
 if uploaded_file is not None:
-    # file_container = st.expander("Visualiser les données ici")
-    df = pd.read_excel(uploaded_file)
+    df = pd.read_csv(uploaded_file)
     df = df.rename(columns = {'Commentaires':'texte'})
     uploaded_file.seek(0)
-    # file_container.write(df)
 
 else:
     st.info(
@@ -71,28 +25,10 @@ else:
     st.stop()
 
 
-# if filename is not None:
-#     # df = pd.read_excel("Verbatimdesabonnement.xlsx")
-#     df = pd.read_excel(filename)
-#     df = df.rename(columns = {'Commentaires':'texte'})
-
-
-# Valeurs manquantes
 valeurs_manquantes = df["texte"].isnull().sum()
 st.write("## Le fichier téléchargé comporte ", df.shape[0]," lignes", "et ", valeurs_manquantes ,"valeurs manquantes")
 
 df_sentiment = df.copy()
-
-# ===============================================================================================================================================
-# ====================================================== Topic Modeling (Thématiques) ===========================================================
-# ===============================================================================================================================================
-
-st.markdown("")
-st.markdown("")
-
-
-            # Although the stop_words parameter was removed in newer versions, you are still able to remove stopwords by using the CountVectorizer!
-            # Note that the CountVectorizer processes the documents after they are clustered which means that you can use it to clean the documents and optimize your topic representations.
 
 @st.cache(allow_output_mutation=True)
 def load_model():
@@ -108,8 +44,6 @@ topics, probs = topic_model.fit_transform(text)
 topic_labels = topic_model.generate_topic_labels(nr_words=6, topic_prefix=False, word_length=15, separator=" - ")
 df_topic_model = topic_model.get_topic_info().head(10)
 
-
-# st.dataframe(dd, 600, 500)  # Same as st.write(df)
 
 fig1 = topic_model.visualize_documents(text, topics=list(range(10)), custom_labels=True, height=900,)
 st.plotly_chart(fig1, use_container_width=True)
