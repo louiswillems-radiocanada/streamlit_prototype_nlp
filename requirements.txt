@@ -16,3 +16,7 @@ textblob
 textblob_fr
 bertopic
 spacy
+protobuf == 3.20
+openpyxl
+xlrd
+streamlit-aggrid
