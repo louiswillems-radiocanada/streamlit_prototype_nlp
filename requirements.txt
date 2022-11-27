@@ -8,3 +8,4 @@ plotly-express
 bertopic
 cudatoolkit
 openpyxl
+libcublas
