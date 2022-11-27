@@ -179,90 +179,90 @@ st.markdown("-------------------------------------------------------------------
 # ====================================================== Nuage des points =======================================================================
 # ===============================================================================================================================================
 
-# col1, col2 = st.columns(2)
+col1, col2 = st.columns(2)
 
-# with col1:
+with col1:
 
-#     comment_words_all = ''
-#     comment_words_pos = ''
-#     comment_words_neg = ''
+    comment_words_all = ''
+    comment_words_pos = ''
+    comment_words_neg = ''
 
-#     new_words=("a","c'est", 'c’est', "j'ai", "voulais", "ai", "je", ":", ".", ",", "Non", "Non .", "7\n2", "7", "2.")
-#     for i in new_words:
-#         stopwords.append(i)
+    new_words=("a","c'est", 'c’est', "j'ai", "voulais", "ai", "je", ":", ".", ",", "Non", "Non .", "7\n2", "7", "2.")
+    for i in new_words:
+        stopwords.append(i)
     
-#     # All
-#     for val in df.texte:
+    # All
+    for val in df.texte:
         
-#         # typecaste each val to string
-#         val = str(val)
+        # typecaste each val to string
+        val = str(val)
     
-#         # split the value
-#         tokens = val.split()
+        # split the value
+        tokens = val.split()
         
-#         # Converts each token into lowercase
-#         for i in range(len(tokens)):
-#             tokens[i] = tokens[i].lower()
+        # Converts each token into lowercase
+        for i in range(len(tokens)):
+            tokens[i] = tokens[i].lower()
         
-#         comment_words_all += " ".join(tokens)+" "
+        comment_words_all += " ".join(tokens)+" "
 
-#     # POSITIFS
-#     df_pos = df_sentiment[df_sentiment["sentiment_prediction"] == "Positif"]
-#     for val in df_pos.texte:
+    # POSITIFS
+    df_pos = df_sentiment[df_sentiment["sentiment_prediction"] == "Positif"]
+    for val in df_pos.texte:
         
-#         # typecaste each val to string
-#         val = str(val)
+        # typecaste each val to string
+        val = str(val)
     
-#         # split the value
-#         tokens = val.split()
+        # split the value
+        tokens = val.split()
         
-#         # Converts each token into lowercase
-#         for i in range(len(tokens)):
-#             tokens[i] = tokens[i].lower()
+        # Converts each token into lowercase
+        for i in range(len(tokens)):
+            tokens[i] = tokens[i].lower()
         
-#         comment_words_pos += " ".join(tokens)+" "
+        comment_words_pos += " ".join(tokens)+" "
 
-#     # NÉGATIFS
-#     df_neg = df_sentiment[df_sentiment["sentiment_prediction"] == "Négatif"]
-#     for val in df_neg.texte:
+    # NÉGATIFS
+    df_neg = df_sentiment[df_sentiment["sentiment_prediction"] == "Négatif"]
+    for val in df_neg.texte:
         
-#         # typecaste each val to string
-#         val = str(val)
+        # typecaste each val to string
+        val = str(val)
     
-#         # split the value
-#         tokens = val.split()
+        # split the value
+        tokens = val.split()
         
-#         # Converts each token into lowercase
-#         for i in range(len(tokens)):
-#             tokens[i] = tokens[i].lower()
+        # Converts each token into lowercase
+        for i in range(len(tokens)):
+            tokens[i] = tokens[i].lower()
         
-#         comment_words_neg += " ".join(tokens)+" "
+        comment_words_neg += " ".join(tokens)+" "
 
 
-#     wordcloud_all = WordCloud(stopwords=stopwords, background_color="white", max_words=500, colormap='cividis').generate(comment_words_all)
-#     wordcloud_all.to_file("nuagedesmots_all.png")
-#     image_all = Image.open('nuagedesmots_all.png')
-#     st.markdown("")
-#     st.image(image_all, caption='Tous les mots clés', width=620, )
+    wordcloud_all = WordCloud(stopwords=stopwords, background_color="white", max_words=500, colormap='cividis').generate(comment_words_all)
+    wordcloud_all.to_file("nuagedesmots_all.png")
+    image_all = Image.open('nuagedesmots_all.png')
+    st.markdown("")
+    st.image(image_all, caption='Tous les mots clés', width=620, )
 
-#     # Positifs
-#     wordcloud_pos = WordCloud(stopwords=stopwords, background_color="white", max_words=200, colormap='Greens').generate(comment_words_pos)
-#     wordcloud_pos.to_file("nuagedesmots_pos.png")
-#     image_pos= Image.open('nuagedesmots_pos.png')
+    # Positifs
+    wordcloud_pos = WordCloud(stopwords=stopwords, background_color="white", max_words=200, colormap='Greens').generate(comment_words_pos)
+    wordcloud_pos.to_file("nuagedesmots_pos.png")
+    image_pos= Image.open('nuagedesmots_pos.png')
 
-#     # Négatifs 
-#     wordcloud_neg = WordCloud(stopwords=stopwords, background_color="white", max_words=200, colormap='Reds').generate(comment_words_pos)
-#     wordcloud_neg.to_file("nuagedesmots_neg.png")
-#     image_neg= Image.open('nuagedesmots_neg.png')
-
-
-# with col2:
-#     st.image(image_pos, caption='Positifs', width=450, )
-#     st.image(image_neg, caption='Négatifs', width=450, )
+    # Négatifs 
+    wordcloud_neg = WordCloud(stopwords=stopwords, background_color="white", max_words=200, colormap='Reds').generate(comment_words_pos)
+    wordcloud_neg.to_file("nuagedesmots_neg.png")
+    image_neg= Image.open('nuagedesmots_neg.png')
 
 
-# st.markdown("")
-# st.markdown("")
+with col2:
+    st.image(image_pos, caption='Positifs', width=450, )
+    st.image(image_neg, caption='Négatifs', width=450, )
+
+
+st.markdown("")
+st.markdown("")
 
 
 # ===============================================================================================================================================
