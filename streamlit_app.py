@@ -10,6 +10,9 @@ import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 
+# Wordcloud
+from wordcloud import WordCloud
+from PIL import Image
 
 # Plotly
 import plotly.express as px
@@ -26,6 +29,7 @@ from textblob import Blobber
 from textblob_fr import PatternTagger, PatternAnalyzer
 
 # Topic modeling - Thématiques
+from bertopic import BERTopic
 from sklearn.feature_extraction.text import CountVectorizer
 
 
