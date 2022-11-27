@@ -2,10 +2,6 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import streamlit as st
-
-from functionforDownloadButtons import download_button
-from sklearn.feature_extraction.text import CountVectorizer
-
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
@@ -28,6 +24,9 @@ from textblob_fr import PatternTagger, PatternAnalyzer
 # Topic modeling - Thématiques
 from bertopic import BERTopic
 from sklearn.feature_extraction.text import CountVectorizer
+
+
+from functionforDownloadButtons import download_button
 
 
 st.set_page_config(
