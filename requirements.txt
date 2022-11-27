@@ -5,10 +5,13 @@ pandas
 seaborn
 streamlit
 scikit-learn
+wordcloud
 plotly-express
 htbuilder
 nltk
 textblob
 textblob_fr
+bertopic
+spacy
 openpyxl
 watchdog
