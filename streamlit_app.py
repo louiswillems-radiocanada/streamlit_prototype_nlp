@@ -183,64 +183,64 @@ st.markdown("-------------------------------------------------------------------
 # ====================================================== Nuage des points =======================================================================
 # ===============================================================================================================================================
 
-col1, col2 = st.columns(2)
+# col1, col2 = st.columns(2)
 
-with col1:
+# with col1:
 
-    comment_words_all = ''
-    comment_words_pos = ''
-    comment_words_neg = ''
+#     comment_words_all = ''
+#     comment_words_pos = ''
+#     comment_words_neg = ''
 
-    new_words=("a","c'est", 'c’est', "j'ai", "voulais", "ai", "je", ":", ".", ",", "Non", "Non .", "7\n2", "7", "2.")
-    for i in new_words:
-        stopwords.append(i)
+#     new_words=("a","c'est", 'c’est', "j'ai", "voulais", "ai", "je", ":", ".", ",", "Non", "Non .", "7\n2", "7", "2.")
+#     for i in new_words:
+#         stopwords.append(i)
     
-    # All
-    for val in df.texte:
+#     # All
+#     for val in df.texte:
         
-        # typecaste each val to string
-        val = str(val)
+#         # typecaste each val to string
+#         val = str(val)
     
-        # split the value
-        tokens = val.split()
+#         # split the value
+#         tokens = val.split()
         
-        # Converts each token into lowercase
-        for i in range(len(tokens)):
-            tokens[i] = tokens[i].lower()
+#         # Converts each token into lowercase
+#         for i in range(len(tokens)):
+#             tokens[i] = tokens[i].lower()
         
-        comment_words_all += " ".join(tokens)+" "
+#         comment_words_all += " ".join(tokens)+" "
 
-    # POSITIFS
-    df_pos = df_sentiment[df_sentiment["sentiment_prediction"] == "Positif"]
-    for val in df_pos.texte:
+#     # POSITIFS
+#     df_pos = df_sentiment[df_sentiment["sentiment_prediction"] == "Positif"]
+#     for val in df_pos.texte:
         
-        # typecaste each val to string
-        val = str(val)
+#         # typecaste each val to string
+#         val = str(val)
     
-        # split the value
-        tokens = val.split()
+#         # split the value
+#         tokens = val.split()
         
-        # Converts each token into lowercase
-        for i in range(len(tokens)):
-            tokens[i] = tokens[i].lower()
+#         # Converts each token into lowercase
+#         for i in range(len(tokens)):
+#             tokens[i] = tokens[i].lower()
         
-        comment_words_pos += " ".join(tokens)+" "
+#         comment_words_pos += " ".join(tokens)+" "
 
-    # NÉGATIFS
-    df_neg = df_sentiment[df_sentiment["sentiment_prediction"] == "Négatif"]
-    for val in df_neg.texte:
+#     # NÉGATIFS
+#     df_neg = df_sentiment[df_sentiment["sentiment_prediction"] == "Négatif"]
+#     for val in df_neg.texte:
         
-        # typecaste each val to string
-        val = str(val)
+#         # typecaste each val to string
+#         val = str(val)
     
-        # split the value
-        tokens = val.split()
+#         # split the value
+#         tokens = val.split()
         
-        # Converts each token into lowercase
-        for i in range(len(tokens)):
-            tokens[i] = tokens[i].lower()
+#         # Converts each token into lowercase
+#         for i in range(len(tokens)):
+#             tokens[i] = tokens[i].lower()
         
-        comment_words_neg += " ".join(tokens)+" "
+#         comment_words_neg += " ".join(tokens)+" "
 
 
 #     wordcloud_all = WordCloud(stopwords=stopwords, background_color="white", max_words=500, colormap='cividis').generate(comment_words_all)
