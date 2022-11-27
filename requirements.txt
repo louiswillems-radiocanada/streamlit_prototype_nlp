@@ -6,7 +6,7 @@ seaborn
 streamlit
 scikit-learn
 wordcloud
-Pillow
+pillow
 plotly-express
 htbuilder
 nltk
