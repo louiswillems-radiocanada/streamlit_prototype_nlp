@@ -13,7 +13,6 @@ nltk
 textblob
 textblob_fr
 bertopic
-onnxruntime
 onnxruntime-gpu
 spacy
 openpyxl
