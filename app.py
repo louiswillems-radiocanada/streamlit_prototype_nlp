@@ -29,7 +29,6 @@ from textblob import Blobber
 from textblob_fr import PatternTagger, PatternAnalyzer
 
 # Topic modeling - Thématiques
-from bertopic import BERTopic
 from sklearn.feature_extraction.text import CountVectorizer
 from spacy.lang.fr.stop_words import STOP_WORDS as fr_stop
 
