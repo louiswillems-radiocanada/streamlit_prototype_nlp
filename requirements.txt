@@ -6,4 +6,5 @@ streamlit
 scikit-learn
 plotly-express
 bertopic
+cudatoolkit
 openpyxl
