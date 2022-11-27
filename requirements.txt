@@ -12,7 +12,5 @@ nltk
 textblob
 textblob_fr
 bertopic
-cudatoolkit=10.1
-spacy
 openpyxl
 watchdog
