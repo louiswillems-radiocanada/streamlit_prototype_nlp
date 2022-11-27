@@ -81,7 +81,7 @@ if uploaded_file is not None:
 else:
     st.info(
         f"""
-            👆 Téléchargez des exemples de fichiers: [exemple.csv](https://people.sc.fsu.edu/~jburkardt/data/csv/biostats.csv) ou [exemple.xlsx](https://docs.google.com/spreadsheets/d/1HR_6CbKNVEP0YpTzKl3HXvt3tVKz6Jz-/edit?usp=share_link&ouid=102390173815691633450&rtpof=true&sd=true)
+            👆 Téléchargez des exemples de fichiers: [exemple.csv](https://drive.google.com/file/d/1F7z3EF-fXuI3DgpWdEqn1LXV2AmQXYfo/view?usp=share_link) ou [exemple.xlsx](https://drive.google.com/file/d/1F7z3EF-fXuI3DgpWdEqn1LXV2AmQXYfo/view?usp=share_link)
         """
     )
 
