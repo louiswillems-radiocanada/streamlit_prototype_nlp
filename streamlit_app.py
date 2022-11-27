@@ -27,7 +27,7 @@ from textblob_fr import PatternTagger, PatternAnalyzer
 
 # Topic modeling - Thématiques
 # from bertopic import BERTopic
-# from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 
 
 st.set_page_config(
