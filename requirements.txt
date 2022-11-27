@@ -13,6 +13,7 @@ nltk
 textblob
 textblob_fr
 bertopic
+bertopic[visualization]
 transformers
 spacy
 openpyxl
