@@ -73,7 +73,7 @@ uploaded_file = st.sidebar.file_uploader("Charger les données ici :", type=("cs
 
 if uploaded_file is not None:
     # file_container = st.expander("Visualiser les données ici")
-    df = pd.read_excel(uploaded_file)
+    df = pd.read_csv(uploaded_file)
     df = df.rename(columns = {'Commentaires':'texte'})
     uploaded_file.seek(0)
     # file_container.write(df)
