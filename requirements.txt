@@ -12,5 +12,6 @@ nltk
 textblob
 textblob_fr
 bertopic
+spacy
 openpyxl
 watchdog

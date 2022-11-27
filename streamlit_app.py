@@ -31,7 +31,6 @@ from textblob_fr import PatternTagger, PatternAnalyzer
 # Topic modeling - Thématiques
 from bertopic import BERTopic
 from sklearn.feature_extraction.text import CountVectorizer
-from spacy.lang.fr.stop_words import STOP_WORDS as fr_stop
 
 
 st.set_page_config(
@@ -110,11 +109,15 @@ st.markdown("")
 
 #### SENTIMENT ANALYSIS
 df_sentiment = df.copy()
-spacy_stopwords = fr_stop
+
+# STOPWORDS en francais
+STOPWORDS = pd.read_csv("stop_words_french.txt")
+stopwords = list(STOPWORDS.a)
+stopwords = stopwords
 
 # Spacy 
-spacy_stopwords = fr_stop
-df_sentiment['texte_sans_stopwords'] = df_sentiment['texte'].apply(lambda x: ' '.join([word for word in x.split() if word not in (spacy_stopwords)]))
+# spacy_stopwords = fr_stop
+df_sentiment['texte_sans_stopwords'] = df_sentiment['texte'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stopwords)]))
 tb = Blobber(pos_tagger=PatternTagger(), analyzer=PatternAnalyzer())
 
 senti_list = []
@@ -183,13 +186,10 @@ st.markdown("-------------------------------------------------------------------
 col1, col2 = st.columns(2)
 
 with col1:
-    # STOPWORDS en francais
-    STOPWORDS = pd.read_csv("stop_words_french.txt")
-    stopwords = list(STOPWORDS.a)
+
     comment_words_all = ''
     comment_words_pos = ''
     comment_words_neg = ''
-    stopwords = stopwords
 
     new_words=("a","c'est", 'c’est', "j'ai", "voulais", "ai", "je", ":", ".", ",", "Non", "Non .", "7\n2", "7", "2.")
     for i in new_words:
