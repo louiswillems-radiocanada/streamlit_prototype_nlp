@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams
 
 # Wordcloud
-from wordcloud import WordCloud
-from PIL import Image
+# from wordcloud import WordCloud
+# from PIL import Image
 
 # Plotly
 import plotly.express as px
