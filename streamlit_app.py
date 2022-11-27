@@ -243,26 +243,26 @@ with col1:
         comment_words_neg += " ".join(tokens)+" "
 
 
-    wordcloud_all = WordCloud(stopwords=stopwords, background_color="white", max_words=500, colormap='cividis').generate(comment_words_all)
-    wordcloud_all.to_file("nuagedesmots_all.png")
-    image_all = Image.open('nuagedesmots_all.png')
-    st.markdown("")
-    st.image(image_all, caption='Tous les mots clés', width=620, )
+#     wordcloud_all = WordCloud(stopwords=stopwords, background_color="white", max_words=500, colormap='cividis').generate(comment_words_all)
+#     wordcloud_all.to_file("nuagedesmots_all.png")
+#     image_all = Image.open('nuagedesmots_all.png')
+#     st.markdown("")
+#     st.image(image_all, caption='Tous les mots clés', width=620, )
 
-    # Positifs
-    wordcloud_pos = WordCloud(stopwords=stopwords, background_color="white", max_words=200, colormap='Greens').generate(comment_words_pos)
-    wordcloud_pos.to_file("nuagedesmots_pos.png")
-    image_pos= Image.open('nuagedesmots_pos.png')
+#     # Positifs
+#     wordcloud_pos = WordCloud(stopwords=stopwords, background_color="white", max_words=200, colormap='Greens').generate(comment_words_pos)
+#     wordcloud_pos.to_file("nuagedesmots_pos.png")
+#     image_pos= Image.open('nuagedesmots_pos.png')
 
-    # Négatifs 
-    wordcloud_neg = WordCloud(stopwords=stopwords, background_color="white", max_words=200, colormap='Reds').generate(comment_words_pos)
-    wordcloud_neg.to_file("nuagedesmots_neg.png")
-    image_neg= Image.open('nuagedesmots_neg.png')
+#     # Négatifs 
+#     wordcloud_neg = WordCloud(stopwords=stopwords, background_color="white", max_words=200, colormap='Reds').generate(comment_words_pos)
+#     wordcloud_neg.to_file("nuagedesmots_neg.png")
+#     image_neg= Image.open('nuagedesmots_neg.png')
 
 
-with col2:
-    st.image(image_pos, caption='Positifs', width=450, )
-    st.image(image_neg, caption='Négatifs', width=450, )
+# with col2:
+#     st.image(image_pos, caption='Positifs', width=450, )
+#     st.image(image_neg, caption='Négatifs', width=450, )
 
 
 st.markdown("")
