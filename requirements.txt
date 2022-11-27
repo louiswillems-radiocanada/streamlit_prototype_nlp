@@ -1,0 +1,22 @@
+seaborn
+matplotlib
+streamlit == 0.87
+pandas == 1.2.4
+keybert
+flair
+click<8
+seaborn
+streamlit
+scikit-learn
+wordcloud
+plotly-express
+htbuilder
+nltk
+textblob
+textblob_fr
+bertopic
+spacy
+protobuf == 3.19
+openpyxl
+xlrd
+streamlit-aggrid
