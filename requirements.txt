@@ -8,13 +8,10 @@ wordcloud
 pillow
 plotly-express
 htbuilder
-nltk
 textblob
 textblob_fr
 bertopic
-onnxruntime
-onnxruntime-gpu
 spacy
 openpyxl
 watchdog
-libcublas
+tensorflow-gpu
