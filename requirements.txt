@@ -2,9 +2,6 @@ seaborn
 matplotlib
 streamlit
 pandas
-keybert
-flair
-click<8
 seaborn
 streamlit
 scikit-learn
@@ -16,7 +13,4 @@ textblob
 textblob_fr
 bertopic
 spacy
-protobuf == 3.19
 openpyxl
-xlrd
-streamlit-aggrid
