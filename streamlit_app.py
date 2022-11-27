@@ -22,15 +22,12 @@ from htbuilder import div, big, h2, styles
 from htbuilder.units import rem
 
 # Analyse de sentiment
-# from nltk.tokenize import sent_tokenize
-# from nltk.tokenize import word_tokenize
-
 from textblob import Blobber
 from textblob_fr import PatternTagger, PatternAnalyzer
 
 # Topic modeling - Thématiques
-# from bertopic import BERTopic
-# from sklearn.feature_extraction.text import CountVectorizer
+from bertopic import BERTopic
+from sklearn.feature_extraction.text import CountVectorizer
 
 
 st.set_page_config(
