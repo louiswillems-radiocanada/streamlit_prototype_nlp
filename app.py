@@ -94,9 +94,6 @@ else:
     st.stop()
 
 
-
-
-
 # if filename is not None:
 #     # df = pd.read_excel("Verbatimdesabonnement.xlsx")
 #     df = pd.read_excel(filename)
