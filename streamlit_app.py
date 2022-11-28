@@ -21,8 +21,11 @@ from htbuilder.units import rem
 from textblob import Blobber
 from textblob_fr import PatternTagger, PatternAnalyzer
 
+# Keywords Relevance
+from keybert import KeyBERT
+
 # Topic modeling - Thématiques
-# from bertopic import BERTopic
+from bertopic import BERTopic
 from sklearn.feature_extraction.text import CountVectorizer
 
 
@@ -30,7 +33,7 @@ from functionforDownloadButtons import download_button
 
 
 st.set_page_config(
-    page_title="VoC sentiment analysis",
+    page_title="Outil d'analyse exploratoire des données textuelles",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded")
@@ -362,170 +365,165 @@ To extract keyphrases, simply set *keyphrase_ngram_range* to (1, 2) or higher de
 # ====================================================== Keyword Extractor  =====================================================================
 # ===============================================================================================================================================
 
-# st.markdown("")
-# st.markdown("")
+st.markdown("")
+st.markdown("")
 
-# with st.form(key="my_form2"):
-#     with st.spinner("L'analyse des mots-clés les plus importants peut prendre quelques minutes..."):
+with st.form(key="my_form2"):
+    with st.spinner("L'analyse des mots-clés les plus importants peut prendre quelques minutes..."):
 
-#         ce, c1, ce, c2, c3 = st.columns([0.07, 1, 0.07, 5, 0.07])
-#         with c1:
-#             ModelType = st.radio(
-#                 "Sélectionner les données",
-#                 ["Toutes les données", "Positifs", "Négatifs"],
-#                 help="Vous avez la possibilité de sélectionner le jeu de données que vous voulez analyser !",
-#             )
+        ce, c1, ce, c2, c3 = st.columns([0.07, 1, 0.07, 5, 0.07])
+        with c1:
+            ModelType = st.radio(
+                "Sélectionner les données",
+                ["Toutes les données", "Positifs", "Négatifs"],
+                help="Vous avez la possibilité de sélectionner le jeu de données que vous voulez analyser !",
+            )
 
-#             if ModelType == "Toutes les données":
-#                 df_keywords = df.copy()
+            if ModelType == "Toutes les données":
+                df_keywords = df.copy()
 
-#             elif ModelType == "Positifs":
-#                 df_keywords = df_pos.copy()
+            elif ModelType == "Positifs":
+                df_keywords = df_pos.copy()
 
-#             else:
-#                 df_keywords = df_neg.copy()
-
-
-#             top_N = st.slider(
-#                 "Nombre de résultats",
-#                 min_value=1,
-#                 max_value=50,
-#                 value=10,
-#                 help="You can choose the number of keywords/keyphrases to display. Between 1 and 30, default number is 10.",
-#             )
-
-#             Ngrams = st.slider(
-#                 "Ngram",
-#                 value=2,
-#                 min_value=2,
-#                 max_value=5,
-#                 help="""The maximum value for the keyphrase_ngram_range.
-
-#     *Keyphrase_ngram_range* sets the length of the resulting keywords/keyphrases.
-
-#     To extract keyphrases, simply set *keyphrase_ngram_range* to (1, 2) or higher depending on the number of words you would like in the resulting keyphrases.""",)
+            else:
+                df_keywords = df_neg.copy()
 
 
-#             StopWordsCheckbox = st.checkbox("Enlever les stop words", help="Tick this box to remove stop words from the document (currently English only)", value=True)
+            top_N = st.slider(
+                "Nombre de résultats",
+                min_value=1,
+                max_value=50,
+                value=10,
+                help="You can choose the number of keywords/keyphrases to display. Between 1 and 30, default number is 10.",
+            )
 
-#         with c2:
-#             from keybert import KeyBERT
+            Ngrams = st.slider(
+                "Ngram",
+                value=2,
+                min_value=2,
+                max_value=5,
+                help="""The maximum value for the keyphrase_ngram_range.
 
-#             @st.cache(allow_output_mutation=True)
-#             def load_model():
-#                 model = KeyBERT("distilbert-base-nli-mean-tokens")
-#                 return model
+    *Keyphrase_ngram_range* sets the length of the resulting keywords/keyphrases.
 
-#             kw_model = load_model()
+    To extract keyphrases, simply set *keyphrase_ngram_range* to (1, 2) or higher depending on the number of words you would like in the resulting keyphrases.""",)
 
-#             text = df_keywords['texte'].values.tolist() 
-#             doc = ' '.join(map(str, text))
-#             # doc = """The 2022 FIFA World Cup is an international association football tournament contested by the men's national teams of FIFA's member associations. The 22nd FIFA World Cup, it is taking place in Qata"""
 
-#             if StopWordsCheckbox:
-#                 StopWords = stopwords
-#             else:
-#                 StopWords = None
+            StopWordsCheckbox = st.checkbox("Enlever les stop words", help="Tick this box to remove stop words from the document (currently English only)", value=True)
 
-#             keywords = kw_model.extract_keywords(doc, keyphrase_ngram_range=(Ngrams, Ngrams), nr_candidates=30, top_n=top_N, stop_words=StopWords)
+        with c2:
+            @st.cache(allow_output_mutation=True)
+            def load_model():
+                model = KeyBERT("distilbert-base-nli-mean-tokens")
+                return model
+
+            kw_model = load_model()
+
+            text = df_keywords['texte'].values.tolist() 
+            doc = ' '.join(map(str, text))
+            # doc = """The 2022 FIFA World Cup is an international association football tournament contested by the men's national teams of FIFA's member associations. The 22nd FIFA World Cup, it is taking place in Qata"""
+
+            if StopWordsCheckbox:
+                StopWords = stopwords
+            else:
+                StopWords = None
+
+            keywords = kw_model.extract_keywords(doc, keyphrase_ngram_range=(Ngrams, Ngrams), nr_candidates=30, top_n=top_N, stop_words=StopWords)
             
-#             df = (
-#                 pd.DataFrame(keywords, columns=["Mots-clés ", "Importance"])
-#                 .sort_values(by="Importance", ascending=False)
-#                 .reset_index(drop=True)
-#             )
+            df = (
+                pd.DataFrame(keywords, columns=["Mots-clés ", "Importance"])
+                .sort_values(by="Importance", ascending=False)
+                .reset_index(drop=True)
+            )
 
-#             df.index += 1
+            df.index += 1
 
-#             # Add styling
-#             cmGreen = sns.light_palette("green", as_cmap=True)
-#             cmRed = sns.light_palette("red", as_cmap=True)
-#             df = df.style.background_gradient(
-#                 cmap=cmGreen,
-#                 subset=[
-#                     "Importance",
-#                 ],
-#             ).hide_index()
+            # Add styling
+            cmGreen = sns.light_palette("green", as_cmap=True)
+            cmRed = sns.light_palette("red", as_cmap=True)
+            df = df.style.background_gradient(
+                cmap=cmGreen,
+                subset=[
+                    "Importance",
+                ],
+            ).hide_index()
 
-#             format_dictionary = {
-#                 "Importance": "{:.0%}",
-#             }
+            format_dictionary = {
+                "Importance": "{:.0%}",
+            }
 
-#             df = df.format(format_dictionary)
-#             st.table(df)
+            df = df.format(format_dictionary)
+            st.table(df)
 
 
-#             submit_button = st.form_submit_button(label="✨ Rafraichir")
+            submit_button = st.form_submit_button(label="✨ Rafraichir")
 
 
 # ===============================================================================================================================================
 # ====================================================== Topic Modeling (Thématiques) ===========================================================
 # ===============================================================================================================================================
 
-# st.markdown("")
-# st.markdown("")
+st.markdown("")
+st.markdown("")
 
-# with st.form(key="my_form2"):
-#     with st.spinner("L'analyse des thématiques peut prendre quelques minutes..."):
+with st.form(key="my_form3"):
+    with st.spinner("L'analyse des thématiques peut prendre quelques minutes..."):
 
-#         ce, c1, ce, c2, c3 = st.columns([0.07, 1, 0.07, 5, 0.07])
-#         with c1:
-#             ModelType = st.radio(
-#                 "Sélectionner les données",
-#                 ["Toutes les données", "Positifs", "Négatifs"],
-#                 help="Vous avez la possibilité de sélectionner le jeu de données que vous voulez analyser !",
-#             )
+        ce, c1, ce, c2, c3 = st.columns([0.07, 1, 0.07, 5, 0.07])
+        with c1:
+            ModelType = st.radio(
+                "Sélectionner les données",
+                ["Toutes les données", "Positifs", "Négatifs"],
+                help="Vous avez la possibilité de sélectionner le jeu de données que vous voulez analyser !",
+            )
 
-#             if ModelType == "Toutes les données":
-#                 df_keywords = df.copy()
+            if ModelType == "Toutes les données":
+                df_keywords = df.copy()
 
-#             elif ModelType == "Positifs":
-#                 df_keywords = df_pos.copy()
+            elif ModelType == "Positifs":
+                df_keywords = df_pos.copy()
 
-#             else:
-#                 df_keywords = df_neg.copy()
+            else:
+                df_keywords = df_neg.copy()
 
-#             top_N = st.slider(
-#                 "Nombre de topics",
-#                 min_value=1,
-#                 max_value=10,
-#                 value=5,
-#                 help="You can choose the number of keywords/keyphrases to display. Between 1 and 30, default number is 10.",
-#             )
+            top_N = st.slider(
+                "Nombre de topics",
+                min_value=1,
+                max_value=10,
+                value=5,
+                help="You can choose the number of keywords/keyphrases to display. Between 1 and 30, default number is 10.",
+            )
 
-#         with c2:
+        with c2:
 
-#             # Although the stop_words parameter was removed in newer versions, you are still able to remove stopwords by using the CountVectorizer!
-#             # Note that the CountVectorizer processes the documents after they are clustered which means that you can use it to clean the documents and optimize your topic representations.
-#             vectorizer_model = CountVectorizer(ngram_range=(1, 1), stop_words= fr_stop)
-#             topic_model = BERTopic(vectorizer_model=vectorizer_model, verbose=True, language="french", nr_topics=top_N)
+            # Although the stop_words parameter was removed in newer versions, you are still able to remove stopwords by using the CountVectorizer!
+            # Note that the CountVectorizer processes the documents after they are clustered which means that you can use it to clean the documents and optimize your topic representations.
 
+            @st.cache(allow_output_mutation=True)
+            def load_model():
+                vectorizer_model = CountVectorizer(ngram_range=(1, 1), stop_words= stopwords)
+                topic_model = BERTopic(vectorizer_model=vectorizer_model, verbose=True, language="french", nr_topics=top_N)
+                return topic_model
 
-#             @st.cache(allow_output_mutation=True)
-#             def load_model():
-#                 vectorizer_model = CountVectorizer(ngram_range=(1, 1), stop_words= fr_stop)
-#                 topic_model = BERTopic(vectorizer_model=vectorizer_model, verbose=True, language="french", nr_topics=top_N)
-#                 return topic_model
+            topic_model = load_model()
 
-#             topic_model = load_model()
+            text = df_keywords['texte'].values.tolist() 
 
-#             text = df_keywords['texte'].values.tolist() 
-
-#             topics, probs = topic_model.fit_transform(text)
-#             topic_labels = topic_model.generate_topic_labels(nr_words=6, topic_prefix=False, word_length=15, separator=" - ")
-#             df_topic_model = topic_model.get_topic_info().head(10)
+            topics, probs = topic_model.fit_transform(text)
+            topic_labels = topic_model.generate_topic_labels(nr_words=6, topic_prefix=False, word_length=15, separator=" - ")
+            df_topic_model = topic_model.get_topic_info().head(10)
 
 
-#             # st.dataframe(dd, 600, 500)  # Same as st.write(df)
+            # st.dataframe(dd, 600, 500)  # Same as st.write(df)
 
-#             fig1 = topic_model.visualize_documents(text, topics=list(range(10)), custom_labels=True, height=900,)
-#             st.plotly_chart(fig1, use_container_width=True)
+            fig1 = topic_model.visualize_documents(text, topics=list(range(10)), custom_labels=True, height=900,)
+            st.plotly_chart(fig1, use_container_width=True)
 
-#             fig2 = topic_model.visualize_barchart(top_n_topics=10, title = "Score des Thématiques")
-#             st.plotly_chart(fig2, use_container_width=True)
+            fig2 = topic_model.visualize_barchart(top_n_topics=10, title = "Score des Thématiques")
+            st.plotly_chart(fig2, use_container_width=True)
 
 
-#             submit_button = st.form_submit_button(label="✨ Rafraichir")
+            submit_button = st.form_submit_button(label="✨ Rafraichir")
 
 
 # ===============================================================================================================================================
