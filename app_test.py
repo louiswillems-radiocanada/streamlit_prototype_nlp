@@ -1,6 +1,6 @@
 import streamlit as st
 import numpy as np
-from pandas import DataFrame
+import pandas as pd
 from keybert import KeyBERT
 # For Flair (Keybert)
 from flair.embeddings import TransformerDocumentEmbeddings
