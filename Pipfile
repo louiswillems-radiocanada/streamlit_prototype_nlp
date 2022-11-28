@@ -19,6 +19,7 @@ bertopic = "*"
 spacy = "*"
 streamlit-aggrid = "*"
 openpyxl = "*"
+keybert = "*"
 
 [dev-packages]
 

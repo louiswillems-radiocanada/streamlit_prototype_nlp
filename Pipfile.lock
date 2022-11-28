@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7a85b85715616921649d3735ab51f64b8d24df49529cffc9e5163fc1ddc8588e"
+            "sha256": "303d36a92fa98f71fc83ddd3143ad0c110ff3634af392f04bfe823cb72b23697"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -370,11 +370,11 @@
         },
         "huggingface-hub": {
             "hashes": [
-                "sha256:1f540c6d57cb1684d3578d7bf2d35041a5145b17e8af932505db7f4fbcc7640d",
-                "sha256:b48860d791502c2b8a0e6c841214df19c67999198a75d1417512b45752508ac6"
+                "sha256:11eed7aab4fa4d1fb532f2aea3379ef4998d9f6bc24a330834dfedd3dac7f441",
+                "sha256:8b9ebf9bbb1782f6f0419ec490973a6487c6c4ed84293a8a325d34c4f898f53f"
             ],
             "markers": "python_full_version >= '3.7.0'",
-            "version": "==0.11.0"
+            "version": "==0.11.1"
         },
         "idna": {
             "hashes": [
@@ -415,6 +415,13 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==4.17.1"
+        },
+        "keybert": {
+            "hashes": [
+                "sha256:b5003d10a5bfa1f7db3cb86e04f33b59939ae09095c093228713bb08499f4555"
+            ],
+            "index": "pypi",
+            "version": "==0.7.0"
         },
         "kiwisolver": {
             "hashes": [

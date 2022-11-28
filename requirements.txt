@@ -11,5 +11,6 @@ htbuilder
 textblob
 textblob_fr
 bertopic
+keyber
 spacy
 openpyxl
