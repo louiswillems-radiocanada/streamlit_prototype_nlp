@@ -268,8 +268,9 @@ st.markdown("")
 
 with st.form(key="my_form1"):
 
-    ce, c1, ce, c2, c3 = st.columns([0.07, 1, 0.07, 5, 0.07])
-    with c1:
+    a0, a1, a2, a3, a4 = st.columns([0.07, 1, 0.07, 5, 0.07])
+
+    with a1:
         ModelType = st.radio(
             "Sélectionner les données",
             ["Toutes les données", "Positifs", "Négatifs"],
@@ -277,13 +278,13 @@ with st.form(key="my_form1"):
         )
 
         if ModelType == "Toutes les données":
-            df_keywords = df.copy()
+            df_frq = df.copy()
 
         elif ModelType == "Positifs":
-            df_keywords = df_pos.copy()
+            df_frq = df_pos.copy()
 
         else:
-            df_keywords = df_neg.copy()
+            df_frq = df_neg.copy()
 
         top_N = st.slider(
              "Nombre de résultats",
@@ -311,7 +312,7 @@ To extract keyphrases, simply set *keyphrase_ngram_range* to (1, 2) or higher de
 
 
     
-    with c2:
+    with a3:
                 # STOPWORDS en francais
         STOPWORDS = pd.read_csv("stop_words_french.txt")
         stopwords = list(STOPWORDS.a)
@@ -353,12 +354,12 @@ To extract keyphrases, simply set *keyphrase_ngram_range* to (1, 2) or higher de
             df = pd.DataFrame(total_list, columns=['text', 'count'])
             return df
 
-        ngram_df = ngrams_top(df_keywords["texte"], (Ngrams, Ngrams), n=top_N,)
+        ngram_df = ngrams_top(df_frq["texte"], (Ngrams, Ngrams), n=top_N,)
 
         fig = px.bar(ngram_df, x="text", y="count", template="plotly_white", labels={"ngram": "Unigram", "count": "Fréquence"}, width=1000, height=500).update_layout(title_text='Top 50 des mots les plus fréquents', title_x=0.5)
         st.plotly_chart(fig)
 
-        submit_button = st.form_submit_button(label="✨ Rafraichir")
+        submit_button1 = st.form_submit_button(label="✨ Rafraichir1")
 
 
 # ===============================================================================================================================================
@@ -371,8 +372,9 @@ st.markdown("")
 with st.form(key="my_form2"):
     with st.spinner("L'analyse des mots-clés les plus importants peut prendre quelques minutes..."):
 
-        ce, c1, ce, c2, c3 = st.columns([0.07, 1, 0.07, 5, 0.07])
-        with c1:
+        b0, b1, b2, b3, b4 = st.columns([0.07, 1, 0.07, 5, 0.07])
+
+        with b1:
             ModelType = st.radio(
                 "Sélectionner les données",
                 ["Toutes les données", "Positifs", "Négatifs"],
@@ -411,7 +413,7 @@ with st.form(key="my_form2"):
 
             StopWordsCheckbox = st.checkbox("Enlever les stop words", help="Tick this box to remove stop words from the document (currently English only)", value=True)
 
-        with c2:
+        with b3:
             @st.cache(allow_output_mutation=True)
             def load_model():
                 model = KeyBERT("distilbert-base-nli-mean-tokens")
@@ -456,7 +458,7 @@ with st.form(key="my_form2"):
             st.table(df)
 
 
-            submit_button = st.form_submit_button(label="✨ Rafraichir")
+            submit_button2 = st.form_submit_button(label="✨ Rafraichir2")
 
 
 # ===============================================================================================================================================
@@ -469,24 +471,24 @@ st.markdown("")
 with st.form(key="my_form3"):
     with st.spinner("L'analyse des thématiques peut prendre quelques minutes..."):
 
-        ce, c1, ce, c2, c3 = st.columns([0.07, 1, 0.07, 5, 0.07])
+        c0, c1, c2, c3, c4 = st.columns([0.07, 1, 0.07, 5, 0.07])
+
         with c1:
-            ModelType = st.radio(
-                "Sélectionner les données",
-                ["Toutes les données", "Positifs", "Négatifs"],
-                help="Vous avez la possibilité de sélectionner le jeu de données que vous voulez analyser !",
-            )
+            # ModelType_c = st.radio(
+            #     "Sélectionner les données",
+            #     ["Toutes les données", "Positifs", "Négatifs"],
+            #     help="Vous avez la possibilité de sélectionner le jeu de données que vous voulez analyser !",
+            # )
+            # if ModelType_c == "Toutes les données":
+            #     df_topics = df.copy()
 
-            if ModelType == "Toutes les données":
-                df_keywords = df.copy()
+            # elif ModelType_c == "Positifs":
+            #     df_topics = df_pos.copy()
 
-            elif ModelType == "Positifs":
-                df_keywords = df_pos.copy()
+            # else:
+            #     df_topics = df_neg.copy()
 
-            else:
-                df_keywords = df_neg.copy()
-
-            top_N = st.slider(
+            top_N_c = st.slider(
                 "Nombre de topics",
                 min_value=1,
                 max_value=10,
@@ -494,20 +496,20 @@ with st.form(key="my_form3"):
                 help="You can choose the number of keywords/keyphrases to display. Between 1 and 30, default number is 10.",
             )
 
-        with c2:
+        with c3:
 
             # Although the stop_words parameter was removed in newer versions, you are still able to remove stopwords by using the CountVectorizer!
             # Note that the CountVectorizer processes the documents after they are clustered which means that you can use it to clean the documents and optimize your topic representations.
 
             @st.cache(allow_output_mutation=True)
-            def load_model():
+            def load_model_topic_modeling():
                 vectorizer_model = CountVectorizer(ngram_range=(1, 1), stop_words= stopwords)
                 topic_model = BERTopic(vectorizer_model=vectorizer_model, verbose=True, language="french", nr_topics=top_N)
                 return topic_model
 
-            topic_model = load_model()
+            topic_model = load_model_topic_modeling()
 
-            text = df_keywords['texte'].values.tolist() 
+            text = df['texte'].values.tolist() 
 
             topics, probs = topic_model.fit_transform(text)
             topic_labels = topic_model.generate_topic_labels(nr_words=6, topic_prefix=False, word_length=15, separator=" - ")
@@ -523,7 +525,7 @@ with st.form(key="my_form3"):
             st.plotly_chart(fig2, use_container_width=True)
 
 
-            submit_button = st.form_submit_button(label="✨ Rafraichir")
+            submit_button3 = st.form_submit_button(label="✨ Rafraichir3")
 
 
 # ===============================================================================================================================================
@@ -535,9 +537,9 @@ st.markdown("## **🎈 Check & download results **")
 
 st.header("")
 
-cs, c1, c2, c3, cLast = st.columns([2, 1.5, 1.5, 1.5, 2])
+d0, d1, d2, d3, cLast = st.columns([2, 1.5, 1.5, 1.5, 2])
 
-with c1:
+with d1:
     # Ajouter le timestamp dans le nom du fichier !!
     CSVButton2 = download_button(df_sentiment, "data.csv", "📥 Téléchargement (.csv)")
 
