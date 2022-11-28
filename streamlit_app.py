@@ -409,11 +409,11 @@ with st.form(key="my_form2"):
             StopWordsCheckbox = st.checkbox("Enlever les stop words", help="Tick this box to remove stop words from the document (currently English only)", value=True)
 
         with c2:
-            from keybert import KeyBERT
+            import keyword
 
             @st.cache(allow_output_mutation=True)
             def load_model():
-                model = KeyBERT("distilbert-base-nli-mean-tokens")
+                model = keyword.KeyBERT("distilbert-base-nli-mean-tokens")
                 return model
 
             kw_model = load_model()

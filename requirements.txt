@@ -1,7 +1,7 @@
 seaborn
 matplotlib
-streamlit == 0.87
-pandas == 1.2.4
+streamlit
+pandas
 streamlit
 scikit-learn
 wordcloud
@@ -11,6 +11,6 @@ htbuilder
 textblob
 textblob_fr
 bertopic
-keyber
+keybert
 spacy
 openpyxl
