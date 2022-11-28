@@ -11,33 +11,6 @@ import os
 import json
 
 
-st.set_page_config(
-    page_title="VoC sentiment analysis",
-    page_icon="📊",
-    layout="wide",
-    initial_sidebar_state="expanded")
-
-st.sidebar.image(
-    "https://cdn.freebiesupply.com/logos/large/2x/radio-canada-logo-png-transparent.png",
-    width=100,
-)
-
-
-def _max_width_():
-    max_width_str = f"max-width: 1500px;"
-    st.markdown(
-        f"""
-    <style>
-    .reportview-container .main .block-container{{
-        {max_width_str}
-    }}
-    </style>    
-    """,
-        unsafe_allow_html=True,
-    )
-
-
-_max_width_()
 
 
 st.sidebar.title("Outil d'analyse exploratoire des données textuelles")
