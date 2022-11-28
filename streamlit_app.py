@@ -21,7 +21,6 @@ from htbuilder.units import rem
 from textblob import Blobber
 from textblob_fr import PatternTagger, PatternAnalyzer
 
-
 # Topic modeling - Thématiques
 # from bertopic import BERTopic
 from sklearn.feature_extraction.text import CountVectorizer
@@ -410,10 +409,10 @@ with st.form(key="my_form2"):
             StopWordsCheckbox = st.checkbox("Enlever les stop words", help="Tick this box to remove stop words from the document (currently English only)", value=True)
 
         with c2:
-            
+            from keybert import KeyBERT
+
             @st.cache(allow_output_mutation=True)
             def load_model():
-                from keybert import KeyBERT
                 model = KeyBERT("distilbert-base-nli-mean-tokens")
                 return model
 
