@@ -21,6 +21,9 @@ from htbuilder.units import rem
 from textblob import Blobber
 from textblob_fr import PatternTagger, PatternAnalyzer
 
+# Keywords Relevancy
+from keybert import KeyBERT
+
 # Topic modeling - Thématiques
 # from bertopic import BERTopic
 from sklearn.feature_extraction.text import CountVectorizer
@@ -406,17 +409,10 @@ with st.form(key="my_form2"):
     To extract keyphrases, simply set *keyphrase_ngram_range* to (1, 2) or higher depending on the number of words you would like in the resulting keyphrases.""",)
 
 
-            StopWordsCheckbox = st.checkbox("Enlever les stop words",
-            help="Tick this box to remove stop words from the document (currently English only)", value=True)
-
-            if StopWordsCheckbox:
-                StopWords = stopwords
-            else:
-                StopWords = None
+            StopWordsCheckbox = st.checkbox("Enlever les stop words", help="Tick this box to remove stop words from the document (currently English only)", value=True)
 
         with c2:
-            from keybert import KeyBERT
-
+            
             @st.cache(allow_output_mutation=True)
             def load_model():
                 model = KeyBERT("distilbert-base-nli-mean-tokens")
@@ -427,6 +423,11 @@ with st.form(key="my_form2"):
             text = df_keywords['texte'].values.tolist() 
             doc = ' '.join(map(str, text))
             # doc = """The 2022 FIFA World Cup is an international association football tournament contested by the men's national teams of FIFA's member associations. The 22nd FIFA World Cup, it is taking place in Qata"""
+
+            if StopWordsCheckbox:
+                StopWords = stopwords
+            else:
+                StopWords = None
 
             keywords = kw_model.extract_keywords(doc, keyphrase_ngram_range=(Ngrams, Ngrams), nr_candidates=30, top_n=top_N, stop_words=StopWords)
             
@@ -550,122 +551,4 @@ with c1:
 
 # with c2:
 #     st.table(df.head(10))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# from bertopic import BERTopic
-
-# # Remove not nulls
-# df_text = df.copy()
-
-# new_words=("a","c'est", 'c’est', "j'ai", "voulais", "ai", "je", "veux", "voir", "est", "ca", "aurai", "jai", "cest","qu")
-
-# for i in new_words:
-#     stopwords.append(i)
-
-# # Remove stopwords
-# df_text['texte_sans_stopwords'] = df_text['texte'].apply(lambda x: ' '.join([word for word in x.split() if word not in (stopwords)]))
-
-# # Series to list
-# text = df_text['texte_sans_stopwords'].values.tolist()
-
-
-
-# st.write ('What would you like to order?')
-
-# icecream = st.checkbox('Ice cream')
-# coffee = st.checkbox('Coffee')
-# cola = st.checkbox('Cola')
-
-# if icecream:
-#     st.write("Great! Here's some more 🍦")
-
-# if coffee: 
-#     st.write("Okay, here's some coffee ☕")
-
-# if cola:
-#     st.write("Here you go 🥤")
-
-
-
-# with st.spinner("L'analyse des thématiques devrait prendre quelques instants"):
-
-#     ce, c1, ce, c2, c3 = st.columns([0.07, 1, 0.07, 5, 0.07])
-#     with c1:
-
-#         top_N = st.slider(
-#             "# of results",
-#             min_value=1,
-#             max_value=30,
-#             value=10,
-#             help="You can choose the number of keywords/keyphrases to display. Between 1 and 30, default number is 10.",
-#         )
-
-#     with c2:
-
-#         @st.cache(allow_output_mutation=True)
-#         def load_model():
-#             return BERTopic(verbose=True, language="french", nr_topics=5)
-#         topic_model = load_model()
-
-#         topics, probs = topic_model.fit_transform(text)
-
-
-#         topic_labels = topic_model.generate_topic_labels(nr_words=6, topic_prefix=False, word_length=15, separator=" - ")
-#         topic_model.set_topic_labels(topic_labels)
-#         topic_model.merge_topics(text, topics_to_merge=[0,10])
-
-#         print(topic_model.get_topic_info().shape)
-#         dd= topic_model.get_topic_info().head(20)
-
-#     st.balloons()
-
-
-
-#     st.dataframe(dd, 600, 500)  # Same as st.write(df)
-
-#     fig1 = topic_model.visualize_documents(text, topics=list(range(10)), custom_labels=True, height=900)
-#     st.plotly_chart(fig1, use_container_width=True)
-
-#     fig2 = topic_model.visualize_barchart(top_n_topics=5)
-#     st.plotly_chart(fig2, use_container_width=True)
-
-#     st.form_submit_button('Login')
 
