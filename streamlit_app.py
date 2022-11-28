@@ -21,8 +21,6 @@ from htbuilder.units import rem
 from textblob import Blobber
 from textblob_fr import PatternTagger, PatternAnalyzer
 
-# Keywords Relevancy
-from keybert import KeyBERT
 
 # Topic modeling - Thématiques
 # from bertopic import BERTopic
@@ -415,6 +413,7 @@ with st.form(key="my_form2"):
             
             @st.cache(allow_output_mutation=True)
             def load_model():
+                from keybert import KeyBERT
                 model = KeyBERT("distilbert-base-nli-mean-tokens")
                 return model
 
