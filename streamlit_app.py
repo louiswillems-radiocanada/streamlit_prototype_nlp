@@ -66,7 +66,7 @@ st.sidebar.markdown("-----------------------------------------------------------
 
 # st.sidebar.markdown("##Upload reviews data :")
 
-uploaded_file = st.sidebar.file_uploader("Charger les données ici :", type=("csv", "xlsx"),)
+uploaded_file = st.sidebar.file_uploader("Cliquer sur le bouton ci-dessous", type=("csv"),)
 
 
 # ===============================================================================================================================================
@@ -85,7 +85,7 @@ if uploaded_file is not None:
 else:
     st.info(
         f"""
-            👆 Téléchargez des exemples de fichiers: [exemple.csv](https://drive.google.com/file/d/1F7z3EF-fXuI3DgpWdEqn1LXV2AmQXYfo/view?usp=share_link) ou [exemple.xlsx](https://drive.google.com/file/d/1F7z3EF-fXuI3DgpWdEqn1LXV2AmQXYfo/view?usp=share_link)
+            👆 Téléchargez un exemple de fichier: [dataset.csv](https://drive.google.com/file/d/1F7z3EF-fXuI3DgpWdEqn1LXV2AmQXYfo/view?usp=share_link)
         """
     )
     st.stop()
@@ -468,25 +468,29 @@ with st.form(key="my_form2"):
 st.markdown("")
 st.markdown("")
 
+df_c = df_sentiment.copy()
+df_pos_c = df_c[df_c["sentiment_prediction"] == "Positifs"]
+df_neg_c = df_c[df_c["sentiment_prediction"] == "Négatifs"]
+
 with st.form(key="my_form3"):
     with st.spinner("L'analyse des thématiques peut prendre quelques minutes..."):
 
         c0, c1, c2, c3, c4 = st.columns([0.07, 1, 0.07, 5, 0.07])
 
         with c1:
-            # ModelType_c = st.radio(
-            #     "Sélectionner les données",
-            #     ["Toutes les données", "Positifs", "Négatifs"],
-            #     help="Vous avez la possibilité de sélectionner le jeu de données que vous voulez analyser !",
-            # )
-            # if ModelType_c == "Toutes les données":
-            #     df_topics = df.copy()
+            ModelType_c = st.radio(
+                "Sélectionner les données",
+                ["Toutes les données", "Positifs", "Négatifs"],
+                help="Vous avez la possibilité de sélectionner le jeu de données que vous voulez analyser !",
+            )
+            if ModelType_c == "Toutes les données":
+                df_topics = df_c.copy()
 
-            # elif ModelType_c == "Positifs":
-            #     df_topics = df_pos.copy()
+            elif ModelType_c == "Positifs":
+                df_topics = df_pos_c.copy()
 
-            # else:
-            #     df_topics = df_neg.copy()
+            else:
+                df_topics = df_neg_c.copy()
 
             top_N_c = st.slider(
                 "Nombre de topics",
@@ -504,12 +508,12 @@ with st.form(key="my_form3"):
             @st.cache(allow_output_mutation=True)
             def load_model_topic_modeling():
                 vectorizer_model = CountVectorizer(ngram_range=(1, 1), stop_words= stopwords)
-                topic_model = BERTopic(vectorizer_model=vectorizer_model, verbose=True, language="french", nr_topics=top_N)
+                topic_model = BERTopic(vectorizer_model=vectorizer_model, verbose=True, language="french", nr_topics=top_N_c)
                 return topic_model
 
             topic_model = load_model_topic_modeling()
 
-            text = df['texte'].values.tolist() 
+            text = df_topics['texte'].values.tolist() 
 
             topics, probs = topic_model.fit_transform(text)
             topic_labels = topic_model.generate_topic_labels(nr_words=6, topic_prefix=False, word_length=15, separator=" - ")
@@ -533,7 +537,7 @@ with st.form(key="my_form3"):
 # ===============================================================================================================================================
 
 
-st.markdown("## **🎈 Check & download results **")
+st.markdown("## **Télécharger les résultats en .csv **")
 
 st.header("")
 
