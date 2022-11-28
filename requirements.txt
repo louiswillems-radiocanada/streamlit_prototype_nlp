@@ -1,16 +1,5 @@
 seaborn
 matplotlib
-streamlit
-pandas
-streamlit
-scikit-learn
-wordcloud
-pillow
-plotly-express
-htbuilder
-textblob
-textblob_fr
-bertopic
+streamlit == 0.87
+pandas == 1.2.4
 keybert
-spacy
-openpyxl

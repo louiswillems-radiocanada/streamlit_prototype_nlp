@@ -458,13 +458,12 @@ To extract keyphrases, simply set *keyphrase_ngram_range* to (1, 2) or higher de
 #             submit_button = st.form_submit_button(label="✨ Rafraichir")
 
 
-
 # ===============================================================================================================================================
 # ====================================================== Topic Modeling (Thématiques) ===========================================================
 # ===============================================================================================================================================
 
-st.markdown("")
-st.markdown("")
+# st.markdown("")
+# st.markdown("")
 
 # with st.form(key="my_form2"):
 #     with st.spinner("L'analyse des thématiques peut prendre quelques minutes..."):
