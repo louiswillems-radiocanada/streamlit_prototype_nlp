@@ -66,7 +66,7 @@ st.sidebar.markdown("-----------------------------------------------------------
 
 # st.sidebar.markdown("##Upload reviews data :")
 
-uploaded_file = st.sidebar.file_uploader("Charger les données ici :", type=("csv", "xlsx"),)
+uploaded_file = st.sidebar.file_uploader("Cliquer sur le bouton ci-dessous", type=("csv"),)
 
 
 # ===============================================================================================================================================
@@ -85,7 +85,7 @@ if uploaded_file is not None:
 else:
     st.info(
         f"""
-            👆 Téléchargez des exemples de fichiers: [exemple.csv](https://drive.google.com/file/d/1F7z3EF-fXuI3DgpWdEqn1LXV2AmQXYfo/view?usp=share_link) ou [exemple.xlsx](https://drive.google.com/file/d/1F7z3EF-fXuI3DgpWdEqn1LXV2AmQXYfo/view?usp=share_link)
+            👆 Téléchargez un exemple de fichier: [dataset.csv](https://drive.google.com/file/d/1F7z3EF-fXuI3DgpWdEqn1LXV2AmQXYfo/view?usp=share_link)
         """
     )
     st.stop()
@@ -155,16 +155,16 @@ with a:
     neutre = df_sentiment["sentiment_prediction"].value_counts(normalize=True)["Neutre"]*100
     negatif = df_sentiment["sentiment_prediction"].value_counts(normalize=True)["Négatif"]*100
 
-    display_dial("POSITIFS(%)", f"{positif:.0f}", COLOR_GREEN)
+    display_dial("POSITIFS", f"{positif:.0f}%", COLOR_GREEN)
 
 with b:
     display_dial(
-        "NÉGATIFS(%)", f"{neutre:.0f}", COLOR_RED
+        "NÉGATIFS", f"{neutre:.0f}%", COLOR_RED
     )
 
 with c:
     display_dial(
-        "NEUTRES(%)", f"{negatif:.0f}", COLOR_BLACK
+        "NEUTRES", f"{negatif:.0f}%", COLOR_BLACK
     )
     # display_dial("SUBJECTIVITY", f"{0.3434:.2f}", COLOR_BLACK)
 
@@ -265,30 +265,132 @@ st.markdown("")
 # ====================================================== Bar Chart (Ngrams) =====================================================================
 # ===============================================================================================================================================
 
-with st.form(key="my_form1"):
-    with st.spinner("L'analyse des mots-clés de votre fichier peut prendre quelques minutes..."):
-        a0, a1, a2, a3, a4 = st.columns([0.07, 1, 0.07, 5, 0.07])
 
-        with a1:
+with st.form(key="Form1"):
+    a0, a1, a2, a3, a4 = st.columns([0.07, 1, 0.07, 5, 0.07])
+
+    with a1:
+        ModelType = st.radio(
+            "Sélectionner les données",
+            ["Toutes les données", "Positifs", "Négatifs"],
+            help="At present, you can choose between 2 models (Flair or DistilBERT) to embed your text. More to come!",
+        )
+
+        if ModelType == "Toutes les données":
+            df_frq = df.copy()
+
+        elif ModelType == "Positifs":
+            df_frq = df_pos.copy()
+
+        else:
+            df_frq = df_neg.copy()
+
+        top_N = st.slider(
+             "Nombre de résultats",
+            min_value=1,
+            max_value=30,
+            value=10,
+            help="You can choose the number of keywords/keyphrases to display. Between 1 and 30, default number is 10.",
+        )
+
+        Ngrams = st.slider(
+            "Ngram",
+            value=1,
+            min_value=1,
+            max_value=4,
+            help="""The maximum value for the keyphrase_ngram_range.
+
+*Keyphrase_ngram_range* sets the length of the resulting keywords/keyphrases.
+
+To extract keyphrases, simply set *keyphrase_ngram_range* to (1, 2) or higher depending on the number of words you would like in the resulting keyphrases.""",)
+
+        StopWordsCheckbox = st.checkbox(
+            "Enlever les stop words",
+            help="Tick this box to remove stop words from the document (currently English only)", value=True
+        )
+
+    with a3:
+        STOPWORDS = pd.read_csv("stop_words_french.txt")
+        stopwords = list(STOPWORDS.a)
+        comment_words = ''
+        stopwords = stopwords
+
+        new_words=("a","c'est", 'c’est', "j'ai", "voulais", "ai", "je", ":", ".", ",", "Non", "Non .", "7\n2", "7", "2.")
+        for i in new_words:
+            stopwords.append(i)
+        
+        # iterate through the csv file
+        for val in df.texte:
+        
+            # typecaste each val to string
+            val = str(val)
+        
+            # split the value
+            tokens = val.split()
+            
+            # Converts each token into lowercase
+            for i in range(len(tokens)):
+                tokens[i] = tokens[i].lower()
+            
+            comment_words += " ".join(tokens)+" "
+
+        if StopWordsCheckbox:
+            StopWords = stopwords
+        else:
+            StopWords = None
+
+        def ngrams_top(corpus, ngram_range, n=None):
+            ### What this function does: List the top n words in a vocabulary according to occurrence in a text corpus.
+            vec = CountVectorizer(ngram_range=ngram_range, stop_words= StopWords).fit(corpus)
+            bag_of_words = vec.transform(corpus)
+            sum_words = bag_of_words.sum(axis=0)
+            words_freq = [(word, sum_words[0, idx]) for word, idx in vec.vocabulary_.items()]
+            words_freq =sorted(words_freq, key = lambda x: x[1], reverse=True)
+            total_list=words_freq[:n]
+            df = pd.DataFrame(total_list, columns=['text', 'count'])
+            return df
+
+        ngram_df = ngrams_top(df_frq["texte"], (Ngrams, Ngrams), n=top_N,)
+
+        fig = px.bar(ngram_df, x="text", y="count", template="plotly_white", labels={"ngram": "Unigram", "count": "Fréquence"}, width=1000, height=500).update_layout(title_text='Top 50 des mots les plus fréquents', title_x=0.5)
+        st.plotly_chart(fig)
+
+        submit_button1 = st.form_submit_button(label="✨ Rafraichir")
+
+
+
+# ===============================================================================================================================================
+# ====================================================== Keyword Extractor  =====================================================================
+# ===============================================================================================================================================
+
+st.markdown("")
+st.markdown("")
+
+with st.form(key="my_form2"):
+    with st.spinner("L'analyse des mots-clés les plus importants peut prendre quelques minutes..."):
+        b0, b1, b2, b3, b4 = st.columns([0.07, 1, 0.07, 5, 0.07])
+
+        with b1:
             ModelType = st.radio(
                 "Sélectionner les données",
                 ["Toutes les données", "Positifs", "Négatifs"],
-                help="At present, you can choose between 2 models (Flair or DistilBERT) to embed your text. More to come!",
+                help="Vous avez la possibilité de sélectionner le jeu de données que vous voulez analyser !",
             )
 
             if ModelType == "Toutes les données":
-                df_frq = df.copy()
+                df_keywords = df.copy()
 
             elif ModelType == "Positifs":
-                df_frq = df_pos.copy()
+                df_keywords = df_pos.copy()
 
             else:
-                df_frq = df_neg.copy()
+                df_keywords = df_neg.copy()
+
 
             top_N = st.slider(
                 "Nombre de résultats",
                 min_value=1,
-                max_value=30,
+                max_value=50,
                 value=10,
                 help="You can choose the number of keywords/keyphrases to display. Between 1 and 30, default number is 10.",
             )
@@ -297,85 +399,32 @@ with st.form(key="my_form1"):
                 "Ngram",
                 value=1,
                 min_value=1,
-                max_value=4,
+                max_value=5,
                 help="""The maximum value for the keyphrase_ngram_range.
 
     *Keyphrase_ngram_range* sets the length of the resulting keywords/keyphrases.
 
     To extract keyphrases, simply set *keyphrase_ngram_range* to (1, 2) or higher depending on the number of words you would like in the resulting keyphrases.""",)
 
-            StopWordsCheckbox = st.checkbox(
-                "Enlever les stop words",
-                help="Tick this box to remove stop words from the document (currently English only)", value=True
-            )
 
+            StopWordsCheckbox = st.checkbox("Enlever les stop words", help="Tick this box to remove stop words from the document (currently English only)", value=True)
 
-        
-        with a3:
-                    # STOPWORDS en francais
-            STOPWORDS = pd.read_csv("stop_words_french.txt")
-            stopwords = list(STOPWORDS.a)
-            comment_words = ''
-            stopwords = stopwords
+        with b3:
+            @st.cache(allow_output_mutation=True)
+            def load_model():
+                model = KeyBERT("paraphrase-multilingual-MiniLM-L12-v2") #distilbert-base-nli-mean-tokens
+                return model
 
-            new_words=("a","c'est", 'c’est', "j'ai", "voulais", "ai", "je", ":", ".", ",", "Non", "Non .", "7\n2", "7", "2.")
-            for i in new_words:
-                stopwords.append(i)
-            
-            # iterate through the csv file
-            for val in df.texte:
-            
-                # typecaste each val to string
-                val = str(val)
-            
-                # split the value
-                tokens = val.split()
-                
-                # Converts each token into lowercase
-                for i in range(len(tokens)):
-                    tokens[i] = tokens[i].lower()
-                
-                comment_words += " ".join(tokens)+" "
+            kw_model = load_model()
+
+            text = df_keywords['texte'].values.tolist() 
+            doc = ' '.join(map(str, text))
+            # doc = """The 2022 FIFA World Cup is an international association football tournament contested by the men's national teams of FIFA's member associations. The 22nd FIFA World Cup, it is taking place in Qata"""
 
             if StopWordsCheckbox:
                 StopWords = stopwords
             else:
                 StopWords = None
-
-            def ngrams_top(corpus, ngram_range, n=None):
-                ### What this function does: List the top n words in a vocabulary according to occurrence in a text corpus.
-                vec = CountVectorizer(ngram_range=ngram_range, stop_words= StopWords).fit(corpus)
-                bag_of_words = vec.transform(corpus)
-                sum_words = bag_of_words.sum(axis=0)
-                words_freq = [(word, sum_words[0, idx]) for word, idx in vec.vocabulary_.items()]
-                words_freq =sorted(words_freq, key = lambda x: x[1], reverse=True)
-                total_list=words_freq[:n]
-                df = pd.DataFrame(total_list, columns=['text', 'count'])
-                return df
-
-            ngram_df = ngrams_top(df_frq["texte"], (Ngrams, Ngrams), n=top_N,)
-
-            fig = px.bar(ngram_df, x="text", y="count", template="plotly_white", labels={"ngram": "Unigram", "count": "Fréquence"}, width=1000, height=500).update_layout(title_text='Mots les plus fréquents', title_x=0.5)
-            st.plotly_chart(fig)
-
-
-    # ===============================================================================================================================================
-    # ====================================================== Keyword Extractor  =====================================================================
-    # ===============================================================================================================================================
-
-            st.markdown("")
-            st.markdown("")
-
-            @st.cache(allow_output_mutation=True)
-            def load_model():
-                model = KeyBERT("distilbert-base-nli-mean-tokens")
-                return model
-
-            kw_model = load_model()
-
-            text = df_frq['texte'].values.tolist() 
-            doc = ' '.join(map(str, text))
-            # doc = """The 2022 FIFA World Cup is an international association football tournament contested by the men's national teams of FIFA's member associations. The 22nd FIFA World Cup, it is taking place in Qata"""
 
             keywords = kw_model.extract_keywords(doc, keyphrase_ngram_range=(Ngrams, Ngrams), nr_candidates=30, top_n=top_N, stop_words=StopWords)
             
@@ -405,41 +454,78 @@ with st.form(key="my_form1"):
             st.table(df)
 
 
+            submit_button2 = st.form_submit_button(label="Rafraichir")
+
+
 # ===============================================================================================================================================
 # ====================================================== Topic Modeling (Thématiques) ===========================================================
 # ===============================================================================================================================================
 
-            st.markdown("")
-            st.markdown("")
+# st.markdown("")
+# st.markdown("")
 
-            # Although the stop_words parameter was removed in newer versions, you are still able to remove stopwords by using the CountVectorizer!
-            # Note that the CountVectorizer processes the documents after they are clustered which means that you can use it to clean the documents and optimize your topic representations.
+# df_c = df_sentiment.copy()
+# df_pos_c = df_c[df_c["sentiment_prediction"] == "Positifs"]
+# df_neg_c = df_c[df_c["sentiment_prediction"] == "Négatifs"]
 
-            @st.cache(allow_output_mutation=True)
-            def load_model_topic_modeling():
-                vectorizer_model = CountVectorizer(ngram_range=(1, 1), stop_words= stopwords)
-                topic_model = BERTopic(vectorizer_model=vectorizer_model, verbose=True, language="french", nr_topics=10)
-                return topic_model
+# with st.form(key="my_form3"):
+#     with st.spinner("L'analyse des thématiques peut prendre quelques minutes..."):
 
-            topic_model = load_model_topic_modeling()
+#         c0, c1, c2, c3, c4 = st.columns([0.07, 1, 0.07, 5, 0.07])
 
-            text = df_frq['texte'].values.tolist() 
+#         with c1:
+#             ModelType_c = st.radio(
+#                 "Sélectionner les données",
+#                 ["Toutes les données", "Positifs", "Négatifs"],
+#                 help="Vous avez la possibilité de sélectionner le jeu de données que vous voulez analyser !",
+#             )
+#             if ModelType_c == "Toutes les données":
+#                 df_topics = df_c.copy()
 
-            topics, probs = topic_model.fit_transform(text)
-            topic_labels = topic_model.generate_topic_labels(nr_words=6, topic_prefix=False, word_length=15, separator=" - ")
-            df_topic_model = topic_model.get_topic_info().head(10)
+#             elif ModelType_c == "Positifs":
+#                 df_topics = df_pos_c.copy()
+
+#             else:
+#                 df_topics = df_neg_c.copy()
+
+#             top_N_c = st.slider(
+#                 "Nombre de topics",
+#                 min_value=1,
+#                 max_value=10,
+#                 value=5,
+#                 help="You can choose the number of keywords/keyphrases to display. Between 1 and 30, default number is 10.",
+#             )
+
+#         with c3:
+
+#             # Although the stop_words parameter was removed in newer versions, you are still able to remove stopwords by using the CountVectorizer!
+#             # Note that the CountVectorizer processes the documents after they are clustered which means that you can use it to clean the documents and optimize your topic representations.
+
+#             @st.cache(allow_output_mutation=True)
+#             def load_model_topic_modeling():
+#                 vectorizer_model = CountVectorizer(ngram_range=(1, 1), stop_words= stopwords)
+#                 topic_model = BERTopic(vectorizer_model=vectorizer_model, verbose=True, language="french", nr_topics=top_N_c)
+#                 return topic_model
+
+#             topic_model = load_model_topic_modeling()
+
+#             text = df_topics['texte'].values.tolist() 
+
+#             topics, probs = topic_model.fit_transform(text)
+#             topic_labels = topic_model.generate_topic_labels(nr_words=6, topic_prefix=False, word_length=15, separator=" - ")
+#             df_topic_model = topic_model.get_topic_info().head(10)
 
 
-            # st.dataframe(dd, 600, 500)  # Same as st.write(df)
+#             # st.dataframe(dd, 600, 500)  # Same as st.write(df)
 
-            fig1 = topic_model.visualize_documents(text, topics=list(range(10)), custom_labels=True, height=900,)
-            st.plotly_chart(fig1, use_container_width=True)
+#             fig1 = topic_model.visualize_documents(text, topics=list(range(10)), custom_labels=True, height=900,)
+#             st.plotly_chart(fig1, use_container_width=True)
 
-            fig2 = topic_model.visualize_barchart(top_n_topics=10, title = "Score des Thématiques")
-            st.plotly_chart(fig2, use_container_width=True)
+#             fig2 = topic_model.visualize_barchart(top_n_topics=10, title = "Score des Thématiques")
+#             st.plotly_chart(fig2, use_container_width=True)
 
 
-            submit_button3 = st.form_submit_button(label="✨ Rafraichir3")
+#             submit_button3 = st.form_submit_button(label="✨ Rafraichir3")
 
 
 # ===============================================================================================================================================
@@ -447,7 +533,7 @@ with st.form(key="my_form1"):
 # ===============================================================================================================================================
 
 
-st.markdown("## **🎈 Check & download results **")
+st.markdown("## **Télécharger les résultats en .csv **")
 
 st.header("")
 
