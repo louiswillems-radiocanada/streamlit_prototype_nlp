@@ -361,102 +361,102 @@ To extract keyphrases, simply set *keyphrase_ngram_range* to (1, 2) or higher de
 
 
 # # ===============================================================================================================================================
-# # ====================================================== Keyword Extractor  =====================================================================
+# # ====================================================== Keyword Extractor ======================================================================
 # # ===============================================================================================================================================
 
-# st.markdown("")
-# st.markdown("")
+st.markdown("")
+st.markdown("")
 
-# with st.form(key="my_form2"):
-#     with st.spinner("L'analyse des mots-clés les plus importants peut prendre quelques secondes..."):
+with st.form(key="my_form2"):
+    with st.spinner("L'analyse des mots-clés les plus importants peut prendre quelques secondes..."):
 
-#         b0, b1, b2, b3, b4 = st.columns([0.07, 1, 0.07, 5, 0.07])
+        b0, b1, b2, b3, b4 = st.columns([0.07, 1, 0.07, 5, 0.07])
 
-#         with b1:
-#             ModelType = st.radio(
-#                 "Sélectionner les données",
-#                 ["Toutes les données", "Positifs", "Négatifs"],
-#                 help="Vous avez la possibilité de sélectionner le jeu de données que vous voulez analyser !",
-#             )
+        with b1:
+            ModelType = st.radio(
+                "Sélectionner les données",
+                ["Toutes les données", "Positifs", "Négatifs"],
+                help="Vous avez la possibilité de sélectionner le jeu de données que vous voulez analyser !",
+            )
 
-#             if ModelType == "Toutes les données":
-#                 df_keywords = df.copy()
+            if ModelType == "Toutes les données":
+                df_keywords = df.copy()
 
-#             elif ModelType == "Positifs":
-#                 df_keywords = df_pos.copy()
+            elif ModelType == "Positifs":
+                df_keywords = df_pos.copy()
 
-#             else:
-#                 df_keywords = df_neg.copy()
-
-
-#             top_N = st.slider(
-#                 "Nombre de résultats",
-#                 min_value=1,
-#                 max_value=50,
-#                 value=10,
-#                 help="You can choose the number of keywords/keyphrases to display. Between 1 and 30, default number is 10.",
-#             )
-
-#             Ngrams = st.slider(
-#                 "Ngram",
-#                 value=5,
-#                 min_value=1,
-#                 max_value=5,
-#                 help="""The maximum value for the keyphrase_ngram_range.
-
-#     *Keyphrase_ngram_range* sets the length of the resulting keywords/keyphrases.
-
-#     To extract keyphrases, simply set *keyphrase_ngram_range* to (1, 2) or higher depending on the number of words you would like in the resulting keyphrases.""",)
+            else:
+                df_keywords = df_neg.copy()
 
 
-#             StopWordsCheckbox = st.checkbox("Enlever les stop words", help="Tick this box to remove stop words from the document (currently English only)", value=False)
+            top_N = st.slider(
+                "Nombre de résultats",
+                min_value=1,
+                max_value=50,
+                value=10,
+                help="You can choose the number of keywords/keyphrases to display. Between 1 and 30, default number is 10.",
+            )
 
-#         with b3:
-#             @st.experimental_singleton
-#             def load_model():
-#                 model = KeyBERT("paraphrase-multilingual-MiniLM-L12-v2") #distilbert-base-nli-mean-tokens
-#                 return model
+            Ngrams = st.slider(
+                "Ngram",
+                value=5,
+                min_value=1,
+                max_value=5,
+                help="""The maximum value for the keyphrase_ngram_range.
 
-#             kw_model = load_model()
+    *Keyphrase_ngram_range* sets the length of the resulting keywords/keyphrases.
 
-#             text = df_keywords['texte'].values.tolist() 
-#             doc = ' '.join(map(str, text))
-#             # doc = """The 2022 FIFA World Cup is an international association football tournament contested by the men's national teams of FIFA's member associations. The 22nd FIFA World Cup, it is taking place in Qata"""
+    To extract keyphrases, simply set *keyphrase_ngram_range* to (1, 2) or higher depending on the number of words you would like in the resulting keyphrases.""",)
 
-#             if StopWordsCheckbox:
-#                 StopWords = stopwords
-#             else:
-#                 StopWords = None
 
-#             keywords = kw_model.extract_keywords(doc, keyphrase_ngram_range=(Ngrams, Ngrams), nr_candidates=30, top_n=top_N, stop_words=StopWords)
+            StopWordsCheckbox = st.checkbox("Enlever les stop words", help="Tick this box to remove stop words from the document (currently English only)", value=False)
+
+        with b3:
+            @st.experimental_singleton
+            def load_model():
+                model = KeyBERT("paraphrase-multilingual-MiniLM-L12-v2") #distilbert-base-nli-mean-tokens
+                return model
+
+            kw_model = load_model()
+
+            text = df_keywords['texte'].values.tolist() 
+            doc = ' '.join(map(str, text))
+            # doc = """The 2022 FIFA World Cup is an international association football tournament contested by the men's national teams of FIFA's member associations. The 22nd FIFA World Cup, it is taking place in Qata"""
+
+            if StopWordsCheckbox:
+                StopWords = stopwords
+            else:
+                StopWords = None
+
+            keywords = kw_model.extract_keywords(doc, keyphrase_ngram_range=(Ngrams, Ngrams), nr_candidates=30, top_n=top_N, stop_words=StopWords)
             
-#             df = (
-#                 pd.DataFrame(keywords, columns=["Mots-clés/Phrases ", "Importance"])
-#                 .sort_values(by="Importance", ascending=False)
-#                 .reset_index(drop=True)
-#             )
+            df = (
+                pd.DataFrame(keywords, columns=["Mots-clés/Phrases ", "Importance"])
+                .sort_values(by="Importance", ascending=False)
+                .reset_index(drop=True)
+            )
 
-#             df.index += 1
+            df.index += 1
 
-#             # Add styling
-#             cmGreen = sns.light_palette("green", as_cmap=True)
-#             cmRed = sns.light_palette("red", as_cmap=True)
-#             df = df.style.background_gradient(
-#                 cmap=cmGreen,
-#                 subset=[
-#                     "Importance",
-#                 ],
-#             ).hide_index()
+            # Add styling
+            cmGreen = sns.light_palette("green", as_cmap=True)
+            cmRed = sns.light_palette("red", as_cmap=True)
+            df = df.style.background_gradient(
+                cmap=cmGreen,
+                subset=[
+                    "Importance",
+                ],
+            ).hide_index()
 
-#             format_dictionary = {
-#                 "Importance": "{:.0%}",
-#             }
+            format_dictionary = {
+                "Importance": "{:.0%}",
+            }
 
-#             df = df.format(format_dictionary)
-#             st.table(df)
+            df = df.format(format_dictionary)
+            st.table(df)
 
 
-#             submit_button2 = st.form_submit_button(label="Rafraichir")
+            submit_button2 = st.form_submit_button(label="Rafraichir")
 
 
 # ===============================================================================================================================================
@@ -468,7 +468,7 @@ st.markdown("")
 
 
 with st.form(key="my_form3"):
-    with st.spinner("L'analyse des thématiques peut prendre quelques secondes..."):
+    with st.spinner("L'analyse des thématiques peut prendre quelques minutes..."):
         c0, c1, c2, c3, c4 = st.columns([0.07, 1, 0.07, 5, 0.07])
 
 
