@@ -463,72 +463,72 @@ To extract keyphrases, simply set *keyphrase_ngram_range* to (1, 2) or higher de
 # ====================================================== Topic Modeling (Thématiques) ===========================================================
 # ===============================================================================================================================================
 
-st.markdown("")
-st.markdown("")
+# st.markdown("")
+# st.markdown("")
 
 
-with st.form(key="my_form3"):
-    with st.spinner("L'analyse des thématiques peut prendre quelques minutes..."):
-        c0, c1, c2, c3, c4 = st.columns([0.07, 1, 0.07, 5, 0.07])
+# with st.form(key="my_form3"):
+#     with st.spinner("L'analyse des thématiques peut prendre quelques minutes..."):
+#         c0, c1, c2, c3, c4 = st.columns([0.07, 1, 0.07, 5, 0.07])
 
 
-        with c1:
-            df_c = df_sentiment.copy()
-            df_pos_c = df_sentiment[df_sentiment["sentiment_prediction"] == "Positif"]
-            df_neg_c = df_sentiment[df_sentiment["sentiment_prediction"] == "Négatif"]
+#         with c1:
+#             df_c = df_sentiment.copy()
+#             df_pos_c = df_sentiment[df_sentiment["sentiment_prediction"] == "Positif"]
+#             df_neg_c = df_sentiment[df_sentiment["sentiment_prediction"] == "Négatif"]
 
-            ModelType_c = st.radio(
-                "Sélectionner les données",
-                ["Toutes les données", "Positifs", "Négatifs"],
-                help="Vous avez la possibilité de sélectionner le jeu de données que vous voulez analyser !",
-            )
-            if ModelType_c == "Toutes les données":
-                df_topics = df_c.copy()
+#             ModelType_c = st.radio(
+#                 "Sélectionner les données",
+#                 ["Toutes les données", "Positifs", "Négatifs"],
+#                 help="Vous avez la possibilité de sélectionner le jeu de données que vous voulez analyser !",
+#             )
+#             if ModelType_c == "Toutes les données":
+#                 df_topics = df_c.copy()
 
-            elif ModelType_c == "Positifs":
-                df_topics = df_pos_c.copy()
+#             elif ModelType_c == "Positifs":
+#                 df_topics = df_pos_c.copy()
 
-            else:
-                df_topics = df_neg_c.copy()
+#             else:
+#                 df_topics = df_neg_c.copy()
 
-            top_N_c = st.slider(
-                "Nombre de topics",
-                min_value=1,
-                max_value=10,
-                value=5,
-                help="You can choose the number of keywords/keyphrases to display. Between 1 and 30, default number is 10.",
-            )
+#             top_N_c = st.slider(
+#                 "Nombre de topics",
+#                 min_value=1,
+#                 max_value=10,
+#                 value=5,
+#                 help="You can choose the number of keywords/keyphrases to display. Between 1 and 30, default number is 10.",
+#             )
 
-        with c3:
+#         with c3:
 
-            # Although the stop_words parameter was removed in newer versions, you are still able to remove stopwords by using the CountVectorizer!
-            # Note that the CountVectorizer processes the documents after they are clustered which means that you can use it to clean the documents and optimize your topic representations.
+#             # Although the stop_words parameter was removed in newer versions, you are still able to remove stopwords by using the CountVectorizer!
+#             # Note that the CountVectorizer processes the documents after they are clustered which means that you can use it to clean the documents and optimize your topic representations.
 
-            @st.experimental_singleton
-            def load_model_topic_modeling():
-                vectorizer_model = CountVectorizer(ngram_range=(1, 1), stop_words= stopwords)
-                topic_model = BERTopic(vectorizer_model=vectorizer_model, verbose=True, language="french", nr_topics=top_N_c)
-                return topic_model
+#             @st.experimental_singleton
+#             def load_model_topic_modeling():
+#                 vectorizer_model = CountVectorizer(ngram_range=(1, 1), stop_words= stopwords)
+#                 topic_model = BERTopic(vectorizer_model=vectorizer_model, verbose=True, language="french", nr_topics=top_N_c)
+#                 return topic_model
 
-            topic_model = load_model_topic_modeling()
+#             topic_model = load_model_topic_modeling()
 
-            text = df_topics['texte'].values.tolist() 
+#             text = df_topics['texte'].values.tolist() 
 
-            topics, probs = topic_model.fit_transform(text)
-            topic_labels = topic_model.generate_topic_labels(nr_words=6, topic_prefix=False, word_length=15, separator=" - ")
-            df_topic_model = topic_model.get_topic_info().head(10)
-
-
-            # st.dataframe(dd, 600, 500)  # Same as st.write(df)
-
-            fig1 = topic_model.visualize_documents(text, topics=list(range(10)), custom_labels=True, height=900,)
-            st.plotly_chart(fig1, use_container_width=True)
-
-            fig2 = topic_model.visualize_barchart(top_n_topics=10, title = "Score des Thématiques")
-            st.plotly_chart(fig2, use_container_width=True)
+#             topics, probs = topic_model.fit_transform(text)
+#             topic_labels = topic_model.generate_topic_labels(nr_words=6, topic_prefix=False, word_length=15, separator=" - ")
+#             df_topic_model = topic_model.get_topic_info().head(10)
 
 
-            submit_button3 = st.form_submit_button(label="✨ Rafraichir")
+#             # st.dataframe(dd, 600, 500)  # Same as st.write(df)
+
+#             fig1 = topic_model.visualize_documents(text, topics=list(range(10)), custom_labels=True, height=900,)
+#             st.plotly_chart(fig1, use_container_width=True)
+
+#             fig2 = topic_model.visualize_barchart(top_n_topics=10, title = "Score des Thématiques")
+#             st.plotly_chart(fig2, use_container_width=True)
+
+
+#             submit_button3 = st.form_submit_button(label="✨ Rafraichir")
 
 
 # ===============================================================================================================================================
