@@ -414,7 +414,7 @@ with st.form(key="my_form2"):
         with b3:
             @st.experimental_singleton
             def load_model():
-                model = KeyBERT("paraphrase-multilingual-MiniLM-L12-v2") #distilbert-base-nli-mean-tokens
+                model = KeyBERT("distilbert-base-nli-mean-tokens") #distilbert-base-nli-mean-tokens
                 return model
 
             kw_model = load_model()
